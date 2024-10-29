@@ -13,13 +13,15 @@ public class ConexionMySQL {
             myConn = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/project",
                     "root",
-                    ""
+                    "1091"
             );
             System.out.println("Genial, nos conectamos");
 
             //Declaracion del scanner y de la opcion
             Scanner scanner = new Scanner(System.in);
             int option;
+
+            //Menu del crud
 
             do {
                 System.out.println("\n----- CRUD 723 -----");
@@ -55,6 +57,7 @@ public class ConexionMySQL {
                         break;
 
                     case 3:
+                        //Actualizar
                         System.out.println("id: ");
                         int nextid = scanner.nextInt();
                         System.out.println("nombre: ");
@@ -68,22 +71,24 @@ public class ConexionMySQL {
                         System.out.println("salario: ");
                         double nextSalario = scanner.nextDouble();
                         actualizarEmpleado(myConn, nextid, nextnombre, nextapellido, nextCargo, nextEmail, nextSalario);
-                        //Actualizar
                         break;
 
                     case 4:
                         //Eliminar
+                        System.out.print("Id del Empleado");
+                        int nextDelete = scanner.nextInt();
+                        eliminarEmpleado(myConn , nextDelete);
                         break;
 
                     case 5:
                         //Salir
+                        System.out.print("Saliendo...");
                         break;
 
                     default:
-
+                        //Opcion default
+                            System.out.print("Ingres una opcion que se encuentra en el menu");
                         break;
-
-
                 }
 
             }while (option != 5);
@@ -92,23 +97,11 @@ public class ConexionMySQL {
             // realizamos una consulta a la base de datos
             myStmt = myConn.createStatement();
             myRes = myStmt.executeQuery("SELECT * FROM employees");
-
-            // iteramos los resultados para imprimir en consola.
-            while (myRes.next()){
-                System.out.println(myRes.getString("nombre") + " " + myRes.getString("apellido") );
-
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Algo salio mal :(");
         }
     }
-
-
-    //Menu del crud
-
-
 
     //METODOS SE INSERCCION
 
@@ -149,7 +142,7 @@ public class ConexionMySQL {
     // Método para actualizar un empleado
     private static void actualizarEmpleado(Connection conexion, int id, String nombre, String apellido, String cargo, String email, double salario)
             throws SQLException {
-        String sql = "UPDATE employees SET nombre = ?, apellido = ?, cargo = ?, email = ?, salario = ?, WHERE id = ?";
+        String sql = "UPDATE employees SET nombre = ?, apellido = ?, cargo = ?, email = ?, salario = ? WHERE id = ?";
         try (PreparedStatement pstmt = conexion.prepareStatement(sql)) {
             pstmt.setString(1, nombre);
             pstmt.setString(2, apellido);
